@@ -1,14 +1,15 @@
 const { ethers } = require('hardhat');
 
 async function main() {
-  const WETH = await ethers.getContractFactory('WETH9');
-  const weth = await WETH.deploy();
+  const weth = await ethers.deployContract('WETH9');
+  await weth.waitForDeployment();
+  const wethAddress = await weth.getAddress();
+  console.log('WETH deployed to:', wethAddress);
 
-  const Vault = await ethers.getContractFactory('Vault');
-  const vault = await Vault.deploy(weth.target);
-
-  console.log(`WETH deployed to: ${weth.target}`);
-  console.log(`Vault deployed to: ${vault.target}`);
+  const vault = await ethers.deployContract('Vault', [wethAddress]);
+  await vault.waitForDeployment();
+  vaultAddress = await vault.getAddress();
+  console.log('Vault deployed to:', vaultAddress);
 }
 
 main()
